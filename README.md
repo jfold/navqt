@@ -1,5 +1,9 @@
 # ENVQT
-Exploiting Noise in Variational Quantum Thermalization (ENVQT) is an algorithm used to learn the parameters in a variational quantum circuit which prepares a thermal state of a Hamiltonian. Different from other approaches it considers the noise itself as a variational parameter which can be learned using approximations on the entropy.
+This repository contains the code and examples for the corresponding paper entitled Foldager, Jonathan, et al. "Exploiting Noise in Variational Quantum Thermalization" will be submitted to arxiv soon.
+
+Exploiting Noise in Variational Quantum Thermalization (ENVQT) is an algorithm used to learn the parameters in a variational quantum circuit which prepares a thermal state of a Hamiltonian. Different from other approaches it considers the noise itself as a variational parameter which can be learned using approximations on the entropy. 
+
+
 
 ## Install packages
 ```bash
