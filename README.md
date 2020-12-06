@@ -23,4 +23,4 @@ pip install -q tensorflow-quantum
 ```
 
 ## Example: N=9, L=5, beta = 1.01
-![alt text](https://github.com/jfold/envqt/training-history-example.png "Training history")
+![alt text](https://github.com/jfold/envqt/edit/main/training-history-example.png "Training history")
