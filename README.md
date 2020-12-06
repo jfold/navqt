@@ -8,6 +8,7 @@ pip install -q tensorflow-quantum
 ```
 
 ## Usage 
+For N=4 qubits, L=2 layers in the QAOA-flexible ansatz approximating the thermal state of an Hamiltonian with neighbor ZZ and XX interactions at temperature 1/beta:
 ```python
   # Circuit initialization
   qc            = QC(N=4,
