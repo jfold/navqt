@@ -13,6 +13,7 @@ pip install -q tensorflow-quantum
   qc            = QC(N=4,
                   L=2,
                   hamiltonian=["ZZ","XX"],
+                  beta=1.0,
                   seed=0,
                   ansatz="qaoa-f")
   for e in tqdm(range(50),leave=False):
@@ -20,3 +21,6 @@ pip install -q tensorflow-quantum
     
   qc.plot_history()
 ```
+
+## Example: N=9, L=4, beta = 1.01
+![alt text](https://github.com/jfold/envqt/edit/main/icon48.pdf "Training history")
