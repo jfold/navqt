@@ -6,9 +6,10 @@ Exploiting Noise in Variational Quantum Thermalization (ENVQT) is an algorithm u
 
 
 ## Install packages
+Using Google Colab, the following two lines at the very top of the notebook should be sufficient for the algorithm to work:
 ```bash
-pip install -q tensorflow==2.3.1
-pip install -q tensorflow-quantum
+!pip install -q tensorflow==2.3.1
+!pip install -q tensorflow-quantum
 ```
 
 ## Usage 
