@@ -28,6 +28,6 @@ For N=4 qubits, L=2 layers in the QAOA-flexible ansatz approximating the thermal
   qc.plot_history()
 ```
 
-## Example: N=9, L=5, beta = 1.01
+## Example: N=9, L=5, beta = 1.01, hamiltonian=["ZZ","Z"]
 
 ![alt text](https://github.com/jfold/envqt/blob/main/training-history-example.png "Training history")
