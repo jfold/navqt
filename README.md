@@ -23,4 +23,4 @@ pip install -q tensorflow-quantum
 ```
 
 ## Example: N=9, L=5, beta = 1.01
-![alt text](https://github.com/jfold/envqt/edit/main/history--optim-gradient--N-9--L-5--Hs-Z+ZZ--beta-1-01Em01--lamda0-1-00Em03--seed-2.pdf "Training history")
+![alt text](https://github.com/jfold/envqt/training-history-example.png "Training history")
