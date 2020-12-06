@@ -24,7 +24,7 @@ pip install -q tensorflow-quantum
 
 ## Example: N=9, L=5, beta = 1.01
 Notation:
-
-![formula](https://render.githubusercontent.com/render/math?math=e^{i%20\pi}=-1)
+    
+![formula](https://render.githubusercontent.com/render/math?math=\langle%20F%20\rangle=\langle%20H%20\rangle%20+\frac{1}{\beta}S)
 
 ![alt text](https://github.com/jfold/envqt/blob/main/training-history-example.png "Training history")
