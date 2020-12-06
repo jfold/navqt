@@ -926,51 +926,15 @@ def load_qc(filename):
 
 # """ Simple Use Case example """
 #savepth   = "drive/My Drive/"
-#N         = 3
-#L         = int(np.maximum(np.ceil(N/2),3))
-#seed      = 0
-#beta      = 0.5
-#lambda0   = 1e-3
-#theta_lr  = 0.4
-#lambda_lr = 1e-3
-#epsilon   = 1e-6
-
-#qc        = QC(N=N,
-#                L=L,
-#                hard_Hc=False,
-#                hamiltonian=["XX","YY", "X"],
-#                lambda0=lambda0, 
-#                beta=beta, 
-#                seed=seed,
-#                theta_lr=theta_lr,
-#                lambda_lr=lambda_lr,
-#                theta_std=1e-4,
-#                epsilon=epsilon,
-#                ansatz="qaoa-r",
-#                savepth=savepth,
-#                verbøgse=False) 
-#current_loss  = np.inf
-#current_lamb  = np.inf
-#current_thet  = np.inf
-#max_iter      = 50
-#tol           = 1e-3
-#tol_n         = 10
-#save_iter     = p.save_iter
-#p.optim       = "gradient"
-## Training loop
-#for e in tqdm(range(max_iter),leave=False):
-#  qc.train(use_lambda_gradient = p.optim == "gradient")
-#  # Stopping criteria
-#  if np.abs(qc.loss[-1] - current_loss) < tol and np.abs(np.linalg.norm(qc.thetas) - current_thet) < tol and np.abs(np.linalg.norm(qc.lambda_) - current_lamb) < tol :
-#     if tol_n == 0:
-#       break
-#     else: 
-#       tol_n-=1
-#  if qc.fidelity[-1] >= 0.99: # cheating but saving computational time
-#    break
-#  # Update history
-#  current_loss = qc.loss[-1]
-#  current_thet = np.linalg.norm(qc.thetas)
-#  current_lamb = np.linalg.norm(qc.lambda_)
-
-#qc.plot_history()
+# Circuit initialization
+#  qc            = QC(N=4,
+#                  L=2,
+#                  hamiltonian=["ZZ","XX"],
+#                  beta=1.0,
+#                  savepth=savepth,
+#                  seed=0,
+#                  ansatz="qaoa-f")
+#  for e in tqdm(range(50),leave=False):
+#    qc.train(use_lambda_gradient = p.optim == "gradient")
+#    
+#  qc.plot_history()
