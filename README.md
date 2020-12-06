@@ -7,3 +7,16 @@ pip install -q tensorflow==2.3.1
 pip install -q tensorflow-quantum
 ```
 
+## Usage 
+```python
+  # Circuit initialization
+  qc            = QC(N=4,
+                  L=2,
+                  hamiltonian=["ZZ","XX"],
+                  seed=0,
+                  ansatz="qaoa-f")
+  for e in tqdm(range(50),leave=False):
+    qc.train(use_lambda_gradient = p.optim == "gradient")
+    
+  qc.plot_history()
+```
