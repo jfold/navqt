@@ -22,7 +22,7 @@ For N=4 qubits, L=2 layers in the QAOA-flexible ansatz approximating the thermal
                   seed=0,
                   ansatz="qaoa-f")
   for e in tqdm(range(50),leave=False):
-    qc.train(use_lambda_gradient = p.optim == "gradient")
+    qc.train()
     
   qc.plot_history()
 ```
