@@ -15,7 +15,6 @@ Using Google Colab, the following two lines at the very top of the notebook shou
 ## Usage 
 For N=4 qubits, L=2 layers in the QAOA-flexible ansatz approximating the thermal state of an Hamiltonian with neighbor ZZ and XX interactions at temperature 1/beta:
 ```python
-  # Circuit initialization
   qc            = QC(N=4,
                   L=2,
                   hamiltonian=["ZZ","XX"],
