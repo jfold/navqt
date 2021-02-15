@@ -1,30 +1,32 @@
-# ENVQT
-This repository contains the code and examples for the corresponding paper entitled *Foldager, Jonathan, et al. "Exploiting Noise in Variational Quantum Thermalization"* available on arXiv soon.
+# NAVQT
+This repository contains the code and examples for the corresponding paper entitled *Foldager, Jonathan, et al. "Noise-assisted Variational Quantum Thermalization"* available on arXiv soon.
 
-Exploiting Noise in Variational Quantum Thermalization (ENVQT) is an algorithm used to learn the parameters in a variational quantum circuit which prepares a thermal state of a Hamiltonian at a specified temperature. Different from other approaches it considers the noise itself as a variational parameter which can be learned using approximations on the entropy. 
+Noise-assisted Variational Quantum Thermalization (NAVQT) is an algorithm used to learn the parameters in a variational quantum circuit which prepares a thermal state of a Hamiltonian at a specified temperature. Different from other approaches it considers the noise itself as a variational parameter which can be learned using approximations on the entropy. 
 
 
 
 ## Install packages
 Using Google Colab, the following two lines at the very top of the notebook should be sufficient for the algorithm to work:
 ```bash
-!pip install -q tensorflow==2.3.1
-!pip install -q tensorflow-quantum
+!pip -q install tensorflow==2.3.1 tensorflow_probability==0.11 tensorflow-quantum cirq 
 ```
 
 ## Usage 
-For N=4 qubits, L=2 layers in the QAOA-flexible ansatz approximating the thermal state of an Hamiltonian with neighbor ZZ and XX interactions at temperature 1/beta:
+For N=9 qubits, L=5 layers approximating the thermal state of an Ising Chain Hamiltonian temperature 1/beta:
 ```python
-  qc            = QC(N=4,
-                  L=2,
-                  hamiltonian=["ZZ","XX"],
-                  beta=1.0,
-                  seed=0,
-                  ansatz="qaoa-f")
-  for e in tqdm(range(50),leave=False):
-    qc.train()
-    
-  qc.plot_history()
+vqt = NAVQT(N=8,
+            L=5,
+            K=1000,
+            epsilon=0.0014,
+            gamma_lr=0.25,
+            H_type="IC-u",
+            p_error_lr=0.06,
+            beta=0.001,
+            p_error=0.001,
+            seed=3,
+            pth="drive/MyDrive/PhD/NAVQT/")
+vqt.train(n_epochs=2)
+vqt.plot_history()
 ```
 
 ## Example: N=9, L=5, beta = 1.01, hamiltonian=["ZZ","Z"]
