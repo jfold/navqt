@@ -25,7 +25,7 @@ vqt = NAVQT(N=8,
             p_error=0.001,
             seed=3,
             pth="drive/MyDrive/PhD/NAVQT/")
-vqt.train(n_epochs=2)
+vqt.train(n_epochs=50)
 vqt.plot_history()
 ```
 
