@@ -29,6 +29,3 @@ vqt.train(n_epochs=50)
 vqt.plot_history()
 ```
 
-## Example: N=9, L=5, beta = 1.01, hamiltonian=["ZZ","Z"]
-
-![alt text](https://github.com/jfold/envqt/blob/main/training-history-example.png "Training history")
