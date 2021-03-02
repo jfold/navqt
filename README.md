@@ -12,7 +12,7 @@ Using Google Colab, the following two lines at the very top of the notebook shou
 ```
 
 ## Usage 
-For N=9 qubits, L=5 layers approximating the thermal state of an Ising Chain Hamiltonian with uniformly distributed coefficients at temperature 1/beta:
+For N=8 qubits, L=5 layers approximating the thermal state of an Ising Chain Hamiltonian with uniformly distributed coefficients at temperature 1/beta:
 ```python
 vqt = NAVQT(N=8,
             L=5,
