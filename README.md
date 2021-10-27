@@ -6,9 +6,9 @@ Noise-assisted Variational Quantum Thermalization (NAVQT) is an algorithm used t
 
 
 ## Install packages
-Using Google Colab, the following two lines at the very top of the notebook should be sufficient for the algorithm to work:
+The requirements.txt file lists all Python libraries we depend on, and they can be installed using:
 ```bash
-!pip -q install tensorflow==2.3.1 tensorflow_probability==0.11 tensorflow-quantum cirq 
+pip install -r requirements.txt
 ```
 
 ## Usage 
