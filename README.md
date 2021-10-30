@@ -12,19 +12,11 @@ pip install -r requirements.txt
 ```
 
 ## Usage 
-For N=8 qubits, L=5 layers approximating the thermal state of an Ising Chain Hamiltonian with uniformly distributed coefficients at temperature 1/beta:
+Example:
 ```python
-vqt = NAVQT(N=8,
-            L=5,
-            K=1000,
-            epsilon=0.0014,
-            gamma_lr=0.25,
-            H_type="IC-u",
-            p_error_lr=0.06,
-            beta=0.001,
-            p_error=0.001,
-            seed=0)
-vqt.train(n_epochs=50)
-vqt.plot_history()
+from navqt import NAVQT
+navqt = NAVQT(N=4,model="IC-u",ansatz="qaoa-f",K=100,beta=10.0,p_err=1e-4,epsilon=1e-5,multilambda=False)
+navqt.train()
+navqt.plot_history()
 ```
 
