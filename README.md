@@ -14,7 +14,7 @@ pip install -r requirements.txt
 ## Usage 
 Shell:
 ```bash
-python main.py "N=4|model="IC-u"|ansatz="qaoa-r"|beta=10.0"
+python main.py "N=4|model=IC-u|ansatz=qaoa-r|beta=10.0"
 ```
 
 Notebook:
