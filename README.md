@@ -12,10 +12,15 @@ pip install -r requirements.txt
 ```
 
 ## Usage 
-Example:
+Shell:
+```bash
+python main.py "N=4|model="IC-u"|ansatz="qaoa-r"|beta=10.0"
+```
+
+Notebook:
 ```python
 from navqt import NAVQT
-navqt = NAVQT(N=4,model="IC-u",ansatz="qaoa-f",K=100,beta=10.0,p_err=1e-4,epsilon=1e-5,multilambda=False)
+navqt = NAVQT(N=4,model="IC-u",ansatz="qaoa-r",beta=10.0)
 navqt.train()
 navqt.plot_history()
 ```
