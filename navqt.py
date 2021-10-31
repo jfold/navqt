@@ -28,6 +28,12 @@ class NAVQT(Circuit):
 		"Noise-Assisted Variational Quantum Thermalization" and allows for 
 		parameterizing both unitary gates and depolerization channels in 
 		quantum circuits. 
+		Example
+		--------
+		>>> from navqt import NAVQT
+		>>> navqt = NAVQT(N=4,model="IC-u",ansatz="qaoa-r",beta=10.0)
+		>>> navqt.train()
+		>>> navqt.plot_history(save=True)
 		"""
 	def __init__(self, **kwargs):    
 		super().__init__()
