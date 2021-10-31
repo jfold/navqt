@@ -27,12 +27,7 @@ class NAVQT(Circuit):
 		The implementation is based on Foldager et al. (2021) 
 		"Noise-Assisted Variational Quantum Thermalization" and allows for 
 		parameterizing both unitary gates and depolerization channels in 
-		quantum circuits. This class can be used in combination with the quantum
-		Restricted Boltzmann Machine (qRBM) to train an RBM from samples.
-
-		Examples
-		--------
-		>>> from sklearn.datasets import make_friedman
+		quantum circuits. 
 		"""
 	def __init__(self, **kwargs):    
 		super().__init__()
