@@ -1,31 +1,13 @@
-import tensorflow as tf
-
-tf.config.threading.set_intra_op_parallelism_threads(2)
-tf.config.threading.set_inter_op_parallelism_threads(1)
-import tensorflow_probability as tfp
-import tensorflow_quantum as tfq
-import cirq
-from cirq import Simulator, DensityMatrixSimulator
-import sympy
-import numpy as np
-import pandas as pd
-from scipy.linalg import expm, logm, sqrtm
-from scipy.optimize import minimize
-from tqdm.notebook import tqdm
-from IPython.display import clear_output
-from cirquit import Circuit
-
-print("GPU possibility:", tf.test.is_gpu_available)
-print("Intra threads:", tf.config.threading.get_intra_op_parallelism_threads())
-print("Inter threads:", tf.config.threading.get_inter_op_parallelism_threads())
+from sympy.core.logic import Not
+from src.imports import *
 
 
 class NAVQT(Circuit):
     """Noise-assisted variational quantum thermalizer (NAVQT).
-    The implementation is based on Foldager et al. (2021) 
-    "Noise-Assisted Variational Quantum Thermalization" and allows for 
-    parameterizing both unitary gates and depolerization channels in 
-    quantum circuits. 
+    The implementation is based on Foldager et al. (2021)
+    "Noise-Assisted Variational Quantum Thermalization" and allows for
+    parameterizing both unitary gates and depolarization channels in
+    quantum circuits.
 
     Example
     --------
@@ -50,7 +32,7 @@ class NAVQT(Circuit):
                     100, np.minimum(self.N * 500, 100 * self.N * (1 / self.beta))
                 )
             )
-        )  # int(self.N/2)*1000
+        )
         self.opt_true_G = True if self.multilambda else self.opt_true_G
         self.d = 2 ** self.N
         self.m = self.L
@@ -105,11 +87,8 @@ class NAVQT(Circuit):
             self.K,
             self.beta,
             np.linalg.norm(self.p_err, ord=2),
-            # self.gamma_annealing_lr,
-            # self.p_err_annealing_lr,
             self.gamma_lr,
             self.p_err_lr,
-            # self.annealing,
             self.opt_true_G,
             self.multilambda,
             self.gamma_seed,
@@ -142,7 +121,7 @@ class NAVQT(Circuit):
             str_ += f"Thermal state Fidelity: {F}"
         return str_
 
-    def set_defaults(self):
+    def set_defaults(self) -> None:
         # =============================================================================
         # Default settings
         # =============================================================================
@@ -162,7 +141,7 @@ class NAVQT(Circuit):
         self.gamma_seed = 0
         self.gamma_fd_order = 0
         self.p_err_fd_order = 0
-        self.max_iter = 1000
+        self.max_iter = 100
         # FLOATS
         self.beta = 10.0
         self.lb = 1e-8
@@ -188,10 +167,7 @@ class NAVQT(Circuit):
         self.gamma_optim = "Adam"
         self.savepth = "/"
 
-    def get_H_from_rho(self):
-        pass
-
-    def get_H(self, loc=0, scale=1):
+    def get_H(self, loc=0, scale=1) -> cirq.PauliSum:
         H_type, coeff_type = self.model.split("-")
         H = cirq.PauliSum()
 
@@ -263,7 +239,7 @@ class NAVQT(Circuit):
                 ].numpy()
                 h_X_coeffs = tf.linalg.normalize(h_X_coeffs, ord="euclidean")[0].numpy()
         elif H_type == "RBM":
-            pass
+            raise NotImplementedError()
 
         if H_type == "IC":
             for i in range(self.N):
@@ -326,6 +302,7 @@ class NAVQT(Circuit):
         self.H_str = str(H).replace(", 0))", "").replace("((", "_")
 
         H_matrix = H.matrix()
+        self.H_spectrum = np.linalg.eigvalsh(H_matrix).real
         A = -self.beta * H_matrix
         eigs = np.linalg.eigvals(A).real
         c = np.max(eigs)
@@ -346,7 +323,7 @@ class NAVQT(Circuit):
             )
         return H
 
-    def H_expectation(self, p_err=None, gammas=None):
+    def H_expectation(self, p_err: float = None) -> tf.Tensor:
         if self.DMS:
             p_err = self.p_err if p_err is None else p_err
             simulator = DensityMatrixSimulator(noise=cirq.depolarize(p_err))
@@ -372,7 +349,7 @@ class NAVQT(Circuit):
             )
         return tf.reduce_mean(expectation)
 
-    def calc_targets(self):
+    def calc_targets(self) -> None:
         eig = tf.linalg.eigvalsh(self.target_rho).numpy().real
         eig = np.sort(np.array([x for x in eig if x > self.lb]))
         self.S_target = -eig.dot(np.log(eig))
@@ -390,7 +367,7 @@ class NAVQT(Circuit):
         self.E_gap = self.H_1 - self.H_0
         self.H_hardness = (self.H_1 - self.H_0) / np.abs(self.H_0)
 
-    def fidelity(self):
+    def fidelity(self) -> float:
         mat = tf.linalg.matmul(
             tf.linalg.matmul(self.target_rho_sqrtm, self.rho), self.target_rho_sqrtm
         ).numpy()
@@ -402,13 +379,13 @@ class NAVQT(Circuit):
             F = 0.0
         return F if 0 <= F <= 1 else np.nan
 
-    def trace_distance(self):
+    def trace_distance(self) -> float:
         T = (1 / 2) * tf.linalg.trace(
             tf.linalg.matmul(self.rho - self.target_rho, self.rho - self.target_rho)
         )
         return T.numpy().real if 0 <= T.numpy().real <= 1 else np.nan
 
-    def update_history(self, row, save=False):
+    def update_history(self, row: int, save: bool = False) -> None:
         self.rho = self.run_circuit()
         F = self.fidelity()
         T = self.trace_distance()
@@ -430,8 +407,8 @@ class NAVQT(Circuit):
             S_approx,
             p_err,
             self.ngrad_H_gamma,
-            tf.norm(self.grad_H_p_err, ord="euclidean"),
-            tf.norm(self.grad_TS_p_err, ord="euclidean"),
+            tf.norm(self.grad_H_p_err, ord="euclidean").numpy(),
+            tf.norm(self.grad_TS_p_err, ord="euclidean").numpy(),
         ]
         if row == 0:
             self.history = pd.DataFrame(
@@ -454,7 +431,7 @@ class NAVQT(Circuit):
         if save:
             self.history.to_csv(self.savepth + "history---" + self.settings + ".csv")
 
-    def G_min_fun(self, x):
+    def G_min_fun(self, x) -> float:
         self.gammas = tf.convert_to_tensor(
             np.expand_dims(x[:-1], axis=1).T, dtype=tf.float32
         )
@@ -465,7 +442,7 @@ class NAVQT(Circuit):
         return self.history["G"].values[-1]
 
     @tf.function
-    def gamma_gradients(self):
+    def gamma_gradients(self) -> tf.Tensor:
         with tf.GradientTape() as g:
             g.watch(self.gammas)
             E = self.H_expectation()
@@ -474,7 +451,7 @@ class NAVQT(Circuit):
             return gradients
         return tf.transpose(tf.expand_dims(tf.reduce_mean(gradients, axis=0), axis=1))
 
-    def gamma_fd_nabla_S(self):
+    def gamma_fd_nabla_S(self) -> np.ndarray:
         coeffs = self.fd_coeffs[self.gamma_fd_order]
         gammas = self.gammas.numpy()
         nabla_S = np.zeros(len(gammas))
@@ -494,7 +471,7 @@ class NAVQT(Circuit):
             gammas = self.gammas.numpy()
         return nabla_S
 
-    def entropy(self, approximation=False, rho=None):
+    def entropy(self, approximation: bool = False, rho: np.ndarray = None) -> float:
         if approximation:
             i1 = (1 - self.p_err) ** self.m + (1 - (1 - self.p_err) ** self.m) / self.d
             i2 = (1 - (1 - self.p_err) ** self.m) / self.d
@@ -509,7 +486,9 @@ class NAVQT(Circuit):
             S = -eig.dot(np.log(eig))
         return S
 
-    def error_gradient(self):  # Consider moving entropy into same forward equation
+    def error_gradient(
+        self,
+    ) -> float:  # Consider moving entropy into same forward equation
         coeffs = self.fd_coeffs[self.p_err_fd_order]
         """ ENERGY: Finite-difference"""
         nabla_H = 0
@@ -567,7 +546,7 @@ class NAVQT(Circuit):
 
         return gradient
 
-    def errors_gradient(self):
+    def errors_gradient(self) -> tf.Tensor:
         coeffs = self.fd_coeffs[self.p_err_fd_order]
         """ ENERGY: Finite-difference"""
         gradients = np.zeros(len(self.p_errs))
@@ -595,7 +574,7 @@ class NAVQT(Circuit):
 
         return tf.convert_to_tensor(gradients, dtype=tf.float32)
 
-    def grid_search(self, n_evals=100):
+    def grid_search(self, n_evals: int = 100) -> None:
         self.gs_f = []
         pbar = tqdm(range(n_evals), leave=False)
         for e in pbar:
@@ -620,7 +599,13 @@ class NAVQT(Circuit):
             self.gs_f.append(self.fidelity())
             pbar.set_postfix({"F_opt": np.nanmax(self.gs_f)})
 
-    def train(self, n_epochs=300, early_stop=False, grad_norm=False, plot_it=False):
+    def train(
+        self,
+        n_epochs: int = 300,
+        early_stop: bool = False,
+        grad_norm: bool = False,
+        plot_it: bool = False,
+    ) -> None:
         best_F = 0
         best_Fs = []
         best_G_approx = np.inf
@@ -740,4 +725,3 @@ class NAVQT(Circuit):
         self.is_trained = True
         print("Done!")
         print("Maximum Fidelity:", np.round(best_F, 4))
-
