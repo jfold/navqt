@@ -304,7 +304,7 @@ class NAVQT(Circuit):
         properties = {}
         H_matrix = H.matrix()
         H_spectrum = np.linalg.eigvalsh(H_matrix).real
-        properties.update({"H_spectrum": H_spectrum})
+        properties.update({"H_spectrum": H_spectrum.tolist()})
         properties.update({"E_max": np.max(np.abs(H_spectrum))})
         A = -self.beta * H_matrix
         eigs = np.linalg.eigvals(A).real
@@ -320,7 +320,7 @@ class NAVQT(Circuit):
         self.target_rho = tf.cast(rho_target, dtype=tf.complex64)
         self.target_rho_sqrtm = tf.cast(sqrt_rho_target, dtype=tf.complex64)
         self.tr_target_rho = np.trace(rho_target).real
-        properties.update({"target_spectrum": self.target_spectrum})
+        properties.update({"target_spectrum": self.target_spectrum.tolist()})
 
         if not np.isclose(self.tr_target_rho, 1.0, rtol=1e-2):
             raise ValueError(
