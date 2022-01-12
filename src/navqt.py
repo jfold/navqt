@@ -303,8 +303,9 @@ class NAVQT(Circuit):
 
         properties = {}
         H_matrix = H.matrix()
-        properties.update({"H_spectrum": np.linalg.eigvalsh(H_matrix).real})
-        properties.update({"E_max": np.max(np.abs(self.H_spectrum))})
+        H_spectrum = np.linalg.eigvalsh(H_matrix).real
+        properties.update({"H_spectrum": H_spectrum})
+        properties.update({"E_max": np.max(np.abs(H_spectrum))})
         A = -self.beta * H_matrix
         eigs = np.linalg.eigvals(A).real
         c = np.max(eigs)
