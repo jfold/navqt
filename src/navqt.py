@@ -301,11 +301,14 @@ class NAVQT(Circuit):
 
         self.H_str = str(H).replace(", 0))", "").replace("((", "_")
 
+        properties = {}
         H_matrix = H.matrix()
-        self.H_spectrum = np.linalg.eigvalsh(H_matrix).real
+        properties.update({"H_spectrum": np.linalg.eigvalsh(H_matrix).real})
+        properties.update({"E_max": np.max(np.abs(self.H_spectrum))})
         A = -self.beta * H_matrix
         eigs = np.linalg.eigvals(A).real
         c = np.max(eigs)
+        properties.update({"beta_E_max": c})
         expos = eigs - c
         log_rho_t = A - np.identity(self.d) * (c + np.log(np.sum(np.exp(expos))))
         rho_target = expm(log_rho_t)
@@ -316,11 +319,17 @@ class NAVQT(Circuit):
         self.target_rho = tf.cast(rho_target, dtype=tf.complex64)
         self.target_rho_sqrtm = tf.cast(sqrt_rho_target, dtype=tf.complex64)
         self.tr_target_rho = np.trace(rho_target).real
+        properties.update({"target_spectrum": self.target_spectrum})
 
         if not np.isclose(self.tr_target_rho, 1.0, rtol=1e-2):
             raise ValueError(
                 "TRACE OF THERMAL STATE NOT 1: Tr = " + str(self.tr_target_rho)
             )
+
+        json_dump = json.dumps(properties)
+        with open(f"{self.savepth}properties---{self.settings}.json", "w") as f:
+            f.write(json_dump)
+
         return H
 
     def H_expectation(self, p_err: float = None) -> tf.Tensor:
@@ -429,7 +438,7 @@ class NAVQT(Circuit):
             )
         self.history.loc[row] = data
         if save:
-            self.history.to_csv(self.savepth + "history---" + self.settings + ".csv")
+            self.history.to_csv(f"{self.savepth}history---{self.settings}.csv")
 
     def G_min_fun(self, x) -> float:
         self.gammas = tf.convert_to_tensor(
