@@ -165,7 +165,7 @@ class NAVQT(Circuit):
         self.ansatz = "qaoa-r"
         self.p_err_optim = "Adam"
         self.gamma_optim = "Adam"
-        self.savepth = "/"
+        self.savepth = os.getcwd() + "/results/"
 
     def get_H(self, loc=0, scale=1) -> cirq.PauliSum:
         H_type, coeff_type = self.model.split("-")
@@ -328,7 +328,10 @@ class NAVQT(Circuit):
             )
 
         json_dump = json.dumps(properties)
-        with open(f"{self.savepth}properties---{self.settings}.json", "w") as f:
+        with open(
+            f"{self.savepth}{self.experiment}/properties--N-{self.N}--M-{self.model}--seed-{self.H_seed}.json",
+            "w",
+        ) as f:
             f.write(json_dump)
 
         return H
