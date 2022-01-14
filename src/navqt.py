@@ -98,6 +98,13 @@ class NAVQT(Circuit):
         )
         self.update_history(row=0)
 
+        json_dump = json.dumps(self.properties)
+        with open(
+            f"{self.savepth}{self.experiment}/properties--N-{self.N}--M-{self.model}--seed-{self.H_seed}.json",
+            "w",
+        ) as f:
+            f.write(json_dump)
+
     def __str__(self):
         j = 20
         str_ = "Noise-Assisted Variational Quantum Thermalizer \n\r"
@@ -301,15 +308,15 @@ class NAVQT(Circuit):
 
         self.H_str = str(H).replace(", 0))", "").replace("((", "_")
 
-        properties = {}
+        self.properties = {}
         H_matrix = H.matrix()
         H_spectrum = np.linalg.eigvalsh(H_matrix).real
-        properties.update({"H_spectrum": H_spectrum.tolist()})
-        properties.update({"E_max": np.max(np.abs(H_spectrum))})
+        self.properties.update({"H_spectrum": H_spectrum.tolist()})
+        self.properties.update({"E_max": np.max(np.abs(H_spectrum))})
         A = -self.beta * H_matrix
         eigs = np.linalg.eigvals(A).real
         c = np.max(eigs)
-        properties.update({"beta_E_max": c})
+        self.properties.update({"beta_E_max": c})
         expos = eigs - c
         log_rho_t = A - np.identity(self.d) * (c + np.log(np.sum(np.exp(expos))))
         rho_target = expm(log_rho_t)
@@ -320,19 +327,12 @@ class NAVQT(Circuit):
         self.target_rho = tf.cast(rho_target, dtype=tf.complex64)
         self.target_rho_sqrtm = tf.cast(sqrt_rho_target, dtype=tf.complex64)
         self.tr_target_rho = np.trace(rho_target).real
-        properties.update({"target_spectrum": self.target_spectrum.tolist()})
+        self.properties.update({"target_spectrum": self.target_spectrum.tolist()})
 
         if not np.isclose(self.tr_target_rho, 1.0, rtol=1e-2):
             raise ValueError(
                 "TRACE OF THERMAL STATE NOT 1: Tr = " + str(self.tr_target_rho)
             )
-
-        json_dump = json.dumps(properties)
-        with open(
-            f"{self.savepth}{self.experiment}/properties--N-{self.N}--M-{self.model}--seed-{self.H_seed}.json",
-            "w",
-        ) as f:
-            f.write(json_dump)
 
         return H
 
