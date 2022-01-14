@@ -35,12 +35,6 @@ def run():
             pass
 
     qc = NAVQT(**kwargs)
-    cwd = os.getcwd() + "/results/"
-    if os.path.isdir(cwd) and not os.path.isdir(cwd + qc.experiment):
-        os.mkdir(cwd + qc.experiment)
-        print("Created new folder named ", cwd + qc.experiment)
-
-    qc.savepth = cwd + qc.experiment + "/"
     if not os.path.isfile(qc.savepth + "history---" + qc.settings + ".pdf"):
         print(qc)
         qc.train(n_epochs=qc.max_iter, early_stop=True, grad_norm=True)

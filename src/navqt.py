@@ -17,7 +17,7 @@ class NAVQT(Circuit):
     >>> navqt.plot_history(save=True)
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, save=True, **kwargs):
         super().__init__()
         self.set_defaults()
         self.__dict__.update(kwargs)
@@ -98,12 +98,18 @@ class NAVQT(Circuit):
         )
         self.update_history(row=0)
 
-        json_dump = json.dumps(self.properties)
-        with open(
-            f"{self.savepth}{self.experiment}/properties--N-{self.N}--M-{self.model}--seed-{self.H_seed}.json",
-            "w",
-        ) as f:
-            f.write(json_dump)
+        if save:
+            cwd = os.getcwd() + "/results/"
+            if os.path.isdir(cwd) and not os.path.isdir(cwd + self.experiment):
+                os.mkdir(cwd + self.experiment)
+                print("Created new folder named ", cwd + self.experiment)
+            self.savepth = cwd + self.experiment + "/"
+            json_dump = json.dumps(self.properties)
+            with open(
+                f"{self.savepth}/properties--N-{self.N}--M-{self.model}--seed-{self.H_seed}.json",
+                "w",
+            ) as f:
+                f.write(json_dump)
 
     def __str__(self):
         j = 20
