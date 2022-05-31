@@ -1,5 +1,5 @@
 # NAVQT
-This repository contains the code and examples for the corresponding paper entitled *Foldager, Jonathan, et al. "Noise-assisted Variational Quantum Thermalization"*: https://arxiv.org/abs/2111.03935.
+This repository contains the code and examples for the corresponding paper [*Foldager, Jonathan, et al. "Noise-assisted Variational Quantum Thermalization"*](https://www.nature.com/articles/s41598-022-07296-z).
 
 Noise-assisted Variational Quantum Thermalization (NAVQT) is an algorithm used to learn the parameters in a variational quantum circuit which prepares a thermal state of a Hamiltonian at a specified temperature. Different from other approaches it considers the noise itself as a variational parameter which can be learned using approximations on the entropy. 
 
